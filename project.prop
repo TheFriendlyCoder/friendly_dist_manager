@@ -1,0 +1,33 @@
+# This file contains a single dictionary definition containing all of the
+# project-specific customization options supported by this template. It is
+# parsed by the setup.py at build time.
+{
+    "NAME" : "friendly_dist_manager",
+    "REPO" : "friendly_dist_manager",
+    "DEPENDENCIES" : [
+    ],
+    "DEV_DEPENDENCIES" : [
+        "pytest",
+        "pytest-cov",
+        "pytest-recording",
+        "pytest-json-report",
+        "mock",
+        "pylint",
+        "sphinx",
+        "sphinxcontrib-apidoc",
+        "sphinx-rtd-theme",
+        "tox",
+        "tox-factor",
+        "tox-pyenv",
+        # pinning coverage package until bugs with coveralls plugin is fixed
+        # https://github.com/z4r/python-coveralls/issues/73
+        "coverage<5.0",
+        "python-coveralls",
+        "wheel",
+        "twine"
+    ],
+    "DESCRIPTION" : "User friendly Python distribution package manager",
+    "KEYWORDS" : "package distribution build setuptools pip poetry ",
+    "SUPPORTED_PYTHON_VERSION" :
+        ">=3.5.0, <4",
+}

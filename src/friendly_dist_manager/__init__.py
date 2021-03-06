@@ -1,0 +1,1 @@
+from friendly_dist_manager.version import __version__

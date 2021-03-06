@@ -1,0 +1,32 @@
+# Temporary build files
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+sdist/
+dist/
+build/
+
+# Temporary unit test files
+htmlcov/
+.tox/
+.coverage*
+docs/_*
+docs/api/*
+htmldocs/*
+.pytest_cache/
+
+# Virtual environmenments
+venv?/
+venv*/
+
+# diff files
+**/*.orig
+
+# project files
+.vscode/
+.idea/
+
+.report.json
+key.txt
+debug.log

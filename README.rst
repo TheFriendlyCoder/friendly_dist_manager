@@ -1,2 +1,5 @@
-# friendly_dist_manager
+Overview
+=============
+
 User friendly Python distribution package manager
+
