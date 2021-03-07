@@ -30,6 +30,8 @@ jobs:
             python -m tox --sitepackages -e py3-test -- --block-network --junit-xml ./build/junit.xml
             coveralls
             python -m tox --sitepackages -e py3-docs
+      - store_artifacts:
+          path: ./logs
       - store_test_results:
           path: build/
       - run:
@@ -56,4 +58,3 @@ workflows:
               # and we don't want an infinite loop building
               # against those tags
               only: /^\d+\.\d+\.\d+$/
-

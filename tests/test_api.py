@@ -8,7 +8,7 @@ def test_wheel():
     sample_toml = """
         [build-system]
         requires = ['wheel']
-        build-backend = "friendly_dist_manager.api:PEP517"
+        build-backend = "friendly_dist_manager.hooks:PEP517"
     """
 
     pyproj = Path("pyproject.toml")
