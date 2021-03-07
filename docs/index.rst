@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to friendly dist managers documentation!
-========================================
+================================================
 
 .. image:: https://img.shields.io/pypi/l/friendly_dist_manager.svg
     :target: https://github.com/TheFriendlyCoder/friendly_dist_manager/blob/master/LICENSE

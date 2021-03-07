@@ -27,7 +27,7 @@
         "twine"
     ],
     "DESCRIPTION" : "User friendly Python distribution package manager",
-    "KEYWORDS" : "package distribution build setuptools pip poetry ",
+    "KEYWORDS" : "package distribution build setuptools pip poetry",
     "SUPPORTED_PYTHON_VERSION" :
         ">=3.5.0, <4",
 }
