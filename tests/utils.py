@@ -59,7 +59,8 @@ def test_id(request):
         str:
             unique ID for the specified test
     """
-    test_prefix = ".".join(request.module.__name__.split(".")[1:])
+    mod_name = request.module.__name__
+    test_prefix = ".".join(mod_name.split(".")[1:])
     return f"{test_prefix}.{request.node.name}"
 
 

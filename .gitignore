@@ -31,6 +31,9 @@ venv*/
 key.txt
 debug.log
 
+# System files
+.DS_Store
+
 # test data
 logs/*
 temp/*

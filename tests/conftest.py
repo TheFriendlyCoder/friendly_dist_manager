@@ -64,6 +64,8 @@ def isolated_environment(request, tmp_path):
     new_vars = dict()
     new_vars["TFC_LOG_FILE"] = str(log_dir() / f"{test_id(request)}.log")
     new_vars["TFC_LOG_LEVEL"] = logging.getLevelName(logging.DEBUG)
+    if preserve:
+        new_vars["TFC_TEMP_DIR"] = str(work_dir)
 
     # change the current working folder to our temp folder before
     # returning control back to the unit test
