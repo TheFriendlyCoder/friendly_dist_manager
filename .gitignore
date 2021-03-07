@@ -30,3 +30,7 @@ venv*/
 .report.json
 key.txt
 debug.log
+
+# test data
+logs/*
+temp/*
