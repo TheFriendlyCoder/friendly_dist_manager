@@ -24,6 +24,7 @@ rm -rf tmp
 virtualenv -p `pyenv which python3` tmp
 source ./tmp/bin/activate
 pip install sphinx sphinxcontrib-apidoc sphinx-rtd-theme
-pip freeze > ./docs/requirements.txt
+pip install -e .
+pip freeze --exclude-editable > ./docs/requirements.txt
 deactivate
 rm -rf tmp
