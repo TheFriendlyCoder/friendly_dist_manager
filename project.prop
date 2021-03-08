@@ -5,6 +5,7 @@
     "NAME" : "friendly_dist_manager",
     "REPO" : "friendly_dist_manager",
     "DEPENDENCIES" : [
+        "toml",
     ],
     "DEV_DEPENDENCIES" : [
         "pytest",

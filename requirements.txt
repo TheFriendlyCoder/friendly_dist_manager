@@ -13,7 +13,7 @@ docutils==0.16
 filelock==3.0.12
 idna==2.10
 imagesize==1.2.0
-importlib-metadata==3.7.0
+importlib-metadata==3.7.2
 importlib-resources==5.1.2
 iniconfig==1.1.1
 isort==5.7.0
@@ -29,7 +29,7 @@ pbr==5.5.1
 pkginfo==1.7.0
 pluggy==0.13.1
 py==1.10.0
-Pygments==2.8.0
+Pygments==2.8.1
 pylint==2.7.2
 pyparsing==2.4.7
 pytest==6.2.2
