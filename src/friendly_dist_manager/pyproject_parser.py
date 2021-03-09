@@ -44,3 +44,13 @@ class PyProjectParser:
     def build_requirements(self):
         """list (str): list of packages required to run the build system backend"""
         return self._data["build-system"]["requires"]
+
+    @property
+    def project_name(self):
+        """str: name of the distribution being built"""
+        return self._data["project"]["name"]
+
+    @property
+    def project_version(self):
+        """str: version of the distribution being built"""
+        return self._data["project"]["version"]
