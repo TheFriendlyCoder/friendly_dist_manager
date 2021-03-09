@@ -1,7 +1,7 @@
 """PIP hooks for triggering build operations"""
 import logging
 from pathlib import Path
-from .pyproject_parser import PyProjectParser
+from .pyproject.parser import PyProjectParser
 from .package_formats.wheel.wheel_file import WheelFile
 
 
@@ -37,7 +37,7 @@ class PEP517:
 
         proj_file = PyProjectParser.from_file(proj)
 
-        obj = WheelFile(proj_file.project_name, proj_file.project_version)
+        obj = WheelFile(proj_file.project.name, proj_file.project.version)
         for cur in Path(".").glob("**/*.py"):
             log.debug(f"Adding file {cur} to path {cur.parent}..")
             obj.add_file(cur, cur.parent)
