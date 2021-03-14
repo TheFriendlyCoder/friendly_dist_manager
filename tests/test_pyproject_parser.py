@@ -39,10 +39,8 @@ def test_minimal_config():
     assert len(obj.project.keywords) == 0
     assert isinstance(obj.project.classifiers, list)
     assert len(obj.project.classifiers) == 0
-    assert obj.project.homepage == ""
-    assert obj.project.documentation == ""
-    assert obj.project.repository == ""
-    assert obj.project.changelog == ""
+    assert isinstance(obj.project.urls, list)
+    assert len(obj.project.urls) == 0
     assert isinstance(obj.project.console_scripts, list)
     assert len(obj.project.console_scripts) == 0
     assert isinstance(obj.project.gui_scripts, list)
@@ -87,9 +85,6 @@ def test_properties():
     expected_classifiers = ["fu", "bar"]
     toml_classifiers = ",".join([f'"{i}"' for i in expected_classifiers])
     expected_homepage = "https://fubar.company.com"
-    expected_docs_url = "https://docs.company.com"
-    expected_repo_url = "https://github.com/fubar"
-    expected_changelog_url = "https://docs.company.com/changes"
     expected_console_script = "fubar.entry"
     expected_ref1 = "library:main"
     expected_gui_script = "fubar.gui.entry"
@@ -128,9 +123,6 @@ def test_properties():
         
         [project.urls] 
         homepage = "{expected_homepage}"
-        documentation = "{expected_docs_url}"
-        repository = "{expected_repo_url}"
-        changelog = "{expected_changelog_url}"
         
         [project.scripts]
         "{expected_console_script}" = "{expected_ref1}"
@@ -172,10 +164,11 @@ def test_properties():
     assert len(obj.project.classifiers) == len(set(obj.project.classifiers))
     assert len(obj.project.classifiers) == len(expected_classifiers)
     assert all([i in expected_classifiers for i in obj.project.classifiers])
-    assert obj.project.homepage == expected_homepage
-    assert obj.project.documentation == expected_docs_url
-    assert obj.project.repository == expected_repo_url
-    assert obj.project.changelog == expected_changelog_url
+    urls = obj.project.urls
+    assert isinstance(urls, list)
+    assert len(urls) == 1
+    assert urls[0].label == "homepage"
+    assert urls[0].url == expected_homepage
     assert isinstance(obj.project.console_scripts, list)
     assert len(obj.project.console_scripts) == 1
     assert obj.project.console_scripts[0].name == expected_console_script

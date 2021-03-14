@@ -12,6 +12,8 @@ def test_properties():
     assert dist_name in obj.filename
     assert dist_ver in obj.filename
     assert obj.filename.endswith(".whl")
+    assert obj.metadata.distribution_name == dist_name
+    assert obj.metadata.distribution_version == dist_ver
 
 
 def test_build_overwrite():
