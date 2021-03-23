@@ -6,6 +6,7 @@ from collections import namedtuple
 
 Person = namedtuple("Person", ["name", "email"])
 Entrypoint = namedtuple("Entrypoint", ["name", "ref"])
+ProjectURL = namedtuple("ProjectURL", ["label", "url"])
 
 
 class ProjectTable:  # pylint: disable=too-many-public-methods
@@ -113,30 +114,13 @@ class ProjectTable:  # pylint: disable=too-many-public-methods
         return self._data.get("classifiers", list())
 
     @property
-    def _urls(self):
-        """dict: mapping table containing keys / IDs of different URLs associated
-        with the project, mapped to their respective URLs"""
-        return self._data.get("urls", dict())
-
-    @property
-    def homepage(self):
-        """str: URL of the project homepage. May be an empty string if undefined."""
-        return self._urls.get("homepage", "")
-
-    @property
-    def documentation(self):
-        """str: URL of the project documentation. May be an empty string if undefined."""
-        return self._urls.get("documentation", "")
-
-    @property
-    def repository(self):
-        """str: URL of the source repository of the project. May be an empty string if undefined."""
-        return self._urls.get("repository", "")
-
-    @property
-    def changelog(self):
-        """str: URL of the change log for the project. May be an empty string if undefined."""
-        return self._urls.get("changelog", "")
+    def urls(self):
+        """list (ProjectURL): URLs providing additional information about the
+        distribution package"""
+        retval = list()
+        for proj_key, proj_url in self._data.get("urls", dict()).items():
+            retval.append(ProjectURL(proj_key, proj_url))
+        return retval
 
     @property
     def console_scripts(self):

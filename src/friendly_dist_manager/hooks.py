@@ -37,7 +37,7 @@ class PEP517:
 
         proj_file = PyProjectParser.from_file(proj)
 
-        obj = WheelFile(proj_file.project.name, proj_file.project.version)
+        obj = WheelFile.from_pyproject(proj_file)
         for cur in Path(".").glob("**/*.py"):
             log.debug(f"Adding file {cur} to path {cur.parent}..")
             obj.add_file(cur, cur.parent)

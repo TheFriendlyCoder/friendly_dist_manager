@@ -8,6 +8,7 @@ from textwrap import dedent
 import tempfile
 from os import environ
 from friendly_dist_manager import __version__
+from .metadata_file import MetadataFile, ExtraRequirement
 
 
 class WheelFile:  # pylint: disable=too-many-instance-attributes
@@ -19,14 +20,64 @@ class WheelFile:  # pylint: disable=too-many-instance-attributes
         * (Proposed PEP) https://www.python.org/dev/peps/pep-0491/
     """
     def __init__(self, dist_name, version):
+        """
+        Args:
+            dist_name (str):
+                name of the distribution package being built
+            version (str):
+                version number associated with the new distribution package
+        """
         self._file_version = "1.0"
-        self._dist_name = dist_name
-        self._dist_version = version
         self._python_tag = "py3"
         self._abi_tag = "none"
         self._platform_tag = "any"
         self._build_tag = None
+        self._is_pure = True
+
+        self._metadata = MetadataFile(dist_name, version)
+
         self._temp_dir_cache = tempfile.TemporaryDirectory()
+
+    @classmethod
+    def from_pyproject(cls, pyproject_config):
+        """Factory method that instantiates an instance of this class from data stored
+        in a pyproject.toml configuration file
+
+        Args:
+            pyproject_config (PyProjectParser):
+                config file for a PEP518 compliant Python package
+
+        Returns:
+            WheelFile:
+                Instance of the class pre-initialized from data provided
+                by the given config file
+        """
+        retval = cls(pyproject_config.project.name, pyproject_config.project.version)
+        retval.metadata.summary = pyproject_config.project.description
+        retval.metadata.authors = pyproject_config.project.authors
+        retval.metadata.license = pyproject_config.project.license
+        retval.metadata.keywords = pyproject_config.project.keywords
+        retval.metadata.classifiers = pyproject_config.project.classifiers
+        retval.metadata.maintainers = pyproject_config.project.maintainers
+        retval.metadata.requirements = pyproject_config.project.dependencies
+        retval.metadata.python_requirements = [pyproject_config.project.python_requirement]
+        for cur_url in pyproject_config.project.urls:
+            if cur_url.label.lower() == "download":
+                retval.metadata.download_url = cur_url
+            elif cur_url.label.lower() == "homepage":
+                retval.metadata.homepage = cur_url
+            else:
+                retval.metadata.project_urls.append(cur_url)
+        for cur_id in pyproject_config.project.optional_dependency_identifiers:
+            for cur_dep in pyproject_config.project.get_optional_dependencies(cur_id):
+                retval.metadata.extra_requirements.append(ExtraRequirement(cur_id, cur_dep))
+
+        return retval
+
+    @property
+    def metadata(self):
+        """MetadataFile: properties describing this distribution package"""
+        return self._metadata
 
     @property
     def _temp_dir(self):
@@ -43,12 +94,11 @@ class WheelFile:  # pylint: disable=too-many-instance-attributes
     @property
     def filename(self):
         """str: gets the fully qualified file name of the wheel file to be generated"""
+        retval = f"{self.metadata.distribution_name}-{self.metadata.distribution_version}"
         if self._build_tag:
-            return f"{self._dist_name}-{self._dist_version}-{self._build_tag}-{self._python_tag}-" \
-                   f"{self._abi_tag}-{self._platform_tag}.whl"
-
-        return f"{self._dist_name}-{self._dist_version}-{self._python_tag}-" \
-               f"{self._abi_tag}-{self._platform_tag}.whl"
+            retval += f"-{self._build_tag}"
+        retval += f"-{self._python_tag}-{self._abi_tag}-{self._platform_tag}.whl"
+        return retval
 
     def add_file(self, src_file, target_path):
         """Adds a new file to the package
@@ -106,7 +156,9 @@ class WheelFile:  # pylint: disable=too-many-instance-attributes
 
     def _make_dist_info(self):
         """Constructs the dist-info folder for the wheel file"""
-        info_dir = self._temp_dir / f"{self._dist_name}-{self._dist_version}.dist-info"
+        info_dir = \
+            self._temp_dir / \
+            f"{self.metadata.distribution_name}-{self.metadata.distribution_version}.dist-info"
         wheel_file = info_dir / "WHEEL"
         meta_file = info_dir / "METADATA"
         record_file = info_dir / "RECORD"
@@ -117,24 +169,13 @@ class WheelFile:  # pylint: disable=too-many-instance-attributes
         wheel_data = f"""
             Wheel-Version: {self._file_version}
             Generator: {dist_name} ({__version__})
-            Root-Is-Purelib: true
+            Root-Is-Purelib: {self._is_pure}
             Tag: {self._python_tag}-{self._abi_tag}-{self._platform_tag}
         """
 
         wheel_file.write_text(self._clean_data(wheel_data))
 
-        meta_data = f"""
-            Metadata-Version: 2.1
-            Name: {self._dist_name}
-            Version: {self._dist_version}
-            Summary: UNKNOWN
-            Home-page: UNKNOWN
-            Author: UNKNOWN
-            Author-email: UNKNOWN
-            License: UNKNOWN
-            Platform: UNKNOWN
-        """
-        meta_file.write_text(self._clean_data(meta_data))
+        meta_file.write_text(self.metadata.raw)
 
         record_data = ""
         for cur_file in self._temp_dir.glob("**/*"):
